@@ -15,10 +15,6 @@ namespace ProductAPI.Controllers
         {
             _productService = productService;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         public IActionResult GetProducts()
         {

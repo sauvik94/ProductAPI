@@ -11,36 +11,24 @@
     - Comments within policy elements are not supported and may disappear. Place your comments between policy elements or at a higher level scope.
 -->
 <policies>
-    <inbound>
-        <base />
-        <set-variable name="id" value="@(context.Request.Url.Query.GetValueOrDefault("id"))" />
-        <rewrite-uri template="@{
-        return "/api/products/"+ context.Variables.GetValueOrDefault<string>("id");}" />
-    </inbound>
-    <backend>
-        <base />
-    </backend>
-    <outbound>
-        <base />
-        <choose>
-            <when condition="@(context.Response.StatusCode == 200)">
-                <return-response>
-                    <set-status code="200" reason="OK" />
-                    <set-header name="Response-reason" exists-action="override">
-                        <value>"Returned product list"</value>
-                    </set-header>
-                    <set-body>@{ 
-                    string text = context.Response.Body.As<string>(preserveContent: true);                      
-                    return text; 
-                    }</set-body>
-                </return-response>
-            </when>
-        </choose>
-    </outbound>
-    <on-error>
-        <base />
-    </on-error>
+<inbound>
+<base />
+<validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
+<openid-config url="https://login.microsoftonline.com/70c0f6d9-7f3b-4425-a6b6-09b47643ec58/v2.0/.well-known/openid-configuration" />
+<required-claims>
+<claim name="aud">
+<value>e676de88-2343-4879-aabe-2e3162812a00</value>
+</claim>
+</required-claims>
+</validate-jwt>
+</inbound>
+<backend>
+<base />
+</backend>
+<outbound>
+<base />
+</outbound>
+<on-error>
+<base />
+</on-error>
 </policies>
-
-
-api://aa6d81d6-f983-4972-acd9-9d6660018127
