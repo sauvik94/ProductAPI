@@ -9,30 +9,29 @@ namespace ProductAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ProductService productService;
+        private readonly ProductService _productService;
 
-        public ProductsController()
+        public ProductsController(ProductService productService)
         {
-            productService = new ProductService();
+            _productService = productService;
         }
-
         [HttpGet]
         public IActionResult GetProducts()
         {
-            return Ok(productService.GetProducts());
+            return Ok(_productService.GetProducts());
         }
 
 
         [HttpGet("{id}")]
         public IActionResult GetProduct(string id)
         {
-            return Ok(productService.GetProduct(id));
+            return Ok(_productService.GetProduct(id));
         }
 
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
-            int rowsAffected=productService.AddProduct(product);
+            int rowsAffected= _productService.AddProduct(product);
             if (rowsAffected>0)
                 return Ok("Added");
             else return Ok("Error occured");
